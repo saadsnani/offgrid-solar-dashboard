@@ -2,7 +2,7 @@
 "use client"
 const IS_DEMO = false
 
-import { useEffect, lazy, Suspense, useMemo, useState } from "react"
+import { useEffect, Suspense, useMemo, useState } from "react"
 import { SystemSynoptic } from "@/components/system-synoptic"
 import { MetricCards } from "@/components/metric-cards"
 import { EnergyChart } from "@/components/energy-chart"
@@ -11,8 +11,10 @@ import { PowerForecastChart } from "@/components/PowerForecastChart"
 import { SystemStatusBoard } from "@/components/system-status-board"
 import { HealthReportCard } from "@/components/health-report-card"
 import { GridIntegrationStatus } from "@/components/grid-integration-status"
+import { EmergencyBanner } from "@/components/emergency-banner"
 import { AnalyticsPageEnhanced } from "@/components/analytics-page-enhanced"
 import { TemperatureDisplayCard } from "@/components/temperature-display-card"
+import { WeatherForecast } from "@/components/weather-forecast"
 import { createDefaultSystemState, createConnectedSensor } from "@/lib/sensor-connection"
 import type { SystemSensorsState } from "@/lib/sensor-connection"
 import {
@@ -23,8 +25,6 @@ import {
 } from "@/lib/esp32-realtime"
 import { LocalNotifications } from "@capacitor/local-notifications"
 
-// Lazy load heavy components
-const WeatherForecast = lazy(() => import("@/components/weather-forecast").then(m => ({ default: m.WeatherForecast })))
 const FIREBASE_RTDB_URL =
   process.env.NEXT_PUBLIC_FIREBASE_RTDB_URL ||
   "https://fir-esp-16cb0-default-rtdb.europe-west1.firebasedatabase.app"
@@ -252,6 +252,10 @@ export function DashboardContent() {
 
   return (
     <div className="space-y-6 w-full px-2 sm:px-4 md:px-8">
+      <div className="relative z-20">
+        <EmergencyBanner />
+      </div>
+
       {/* System Synoptic - First */}
       <div className="relative z-10 mt-16">
         <SystemSynoptic sensors={sensors} />

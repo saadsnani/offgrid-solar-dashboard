@@ -20,9 +20,9 @@ export default function Home() {
     setIsLoading(false)
   }, [])
 
-  const handleLogin = (email: string) => {
+  const handleLogin = () => {
     setIsLoggedIn(true)
-    setUserEmail(email)
+    setUserEmail("saadsnani@smartems.com")
   }
 
   const handleLogout = () => {

@@ -8,7 +8,7 @@ import { DashboardContent } from "@/components/dashboard-content"
 
 // Lazy load heavy pages for better performance
 const AnalyticsPageEnhanced = lazy(() => import("@/components/analytics-page-enhanced").then((m) => ({ default: m.AnalyticsPageEnhanced })))
-const AIPredictionsPage = lazy(() => import("@/components/ai-predictions-page"))
+const AIPredictionsPage = lazy(() => import("@/components/ai-predictions-page").then((m) => ({ default: m.AIPredictionsPage })))
 const SettingsPage = lazy(() => import("@/components/settings-page").then((m) => ({ default: m.SettingsPage })))
 const SystemHealthPage = lazy(() => import("@/components/system-health-page").then((m) => ({ default: m.SystemHealthPage })))
 const ProfilePage = lazy(() => import("@/components/profile-page").then((m) => ({ default: m.ProfilePage })))

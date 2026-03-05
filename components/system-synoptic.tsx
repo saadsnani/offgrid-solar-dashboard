@@ -121,7 +121,7 @@ export function SystemSynoptic({ sensors }: SystemSynopticProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col items-center justify-between gap-4 py-4">
+        <div className="flex flex-col lg:flex-row lg:flex-nowrap items-center lg:items-stretch justify-between gap-4 py-4 overflow-x-auto lg:overflow-visible">
           {/* Solar Panel */}
           <ComponentNode
             icon={<Sun className="w-6 h-6" />}
