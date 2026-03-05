@@ -1,28 +1,19 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
-import { Eye, EyeOff, Sun, Loader2, Zap } from "lucide-react"
+import { Sun, Loader2, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
 interface LoginPageProps {
   onLogin: () => void
 }
 
 export function LoginPage({ onLogin }: LoginPageProps) {
-  const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleEnter = async () => {
     setIsLoading(true)
-    // Simulate login
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    await new Promise((resolve) => setTimeout(resolve, 700))
     setIsLoading(false)
     onLogin()
   }
@@ -68,75 +59,49 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             <p className="text-muted-foreground text-sm mt-1">Système Intelligent de Gestion d'Énergie</p>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground/80">
-                Adresse Email
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="admin@smartems.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-input/50 border-border/50 focus:border-primary h-12"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground/80">
-                Mot de Passe
-              </Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-input/50 border-border/50 focus:border-primary h-12 pr-12"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+          <div className="space-y-6">
+            <div className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-4 sm:p-5 space-y-3">
+              <p className="text-[11px] uppercase tracking-[0.2em] text-primary font-semibold">Projet de Fin d'Etudes</p>
+              <div className="space-y-2">
+                <p className="text-sm text-foreground">
+                  <span className="text-muted-foreground">Encadre par :</span>{" "}
+                  <span className="font-semibold">Mr. Abdelaziz FRI</span>
+                </p>
+                <p className="text-sm text-foreground">
+                  <span className="text-muted-foreground">Realise par :</span>{" "}
+                  <span className="font-semibold">Saad SNANI & Walid EL HALOUAT</span>
+                </p>
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <button type="button" className="text-sm text-primary hover:text-primary/80 transition-colors">
-                Mot de passe oublié ?
-              </button>
-            </div>
-
             <Button
-              type="submit"
+              type="button"
+              onClick={handleEnter}
               className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Connexion...
+                  Chargement...
                 </>
               ) : (
                 <>
                   <Zap className="w-5 h-5 mr-2" />
-                  Se Connecter
+                  Entrer
                 </>
               )}
             </Button>
-          </form>
+          </div>
 
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-border/30 text-center">
-            <p className="text-xs text-muted-foreground">École Supérieure de Technologie - EST</p>
+            <p className="text-xs text-muted-foreground">Ecole Superieure de Technologie - EST</p>
+            <p className="text-xs text-muted-foreground mt-2">© {new Date().getFullYear()} Smart EMS. Tous droits reserves.</p>
+            <p className="text-[11px] text-muted-foreground mt-1">
+              Toute reproduction, publication ou diffusion sans autorisation est interdite.
+            </p>
+            <p className="text-xs text-primary mt-2 font-semibold">By SAADSNANI</p>
           </div>
         </div>
       </div>
