@@ -123,11 +123,14 @@ export function Header({ onLogout, userEmail, onMenuClick, isMenuOpen, showBackB
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="hidden md:flex items-center gap-1 sm:gap-2 px-2 sm:px-3 h-8 sm:h-10 rounded-full border border-emerald-200/70 dark:border-emerald-400/25 bg-[linear-gradient(120deg,rgba(255,255,255,0.86),rgba(236,253,248,0.82),rgba(233,247,255,0.8))] dark:bg-white/5 hover:bg-emerald-500/15 dark:hover:bg-emerald-400/15">
+                <Button variant="ghost" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 h-8 sm:h-10 rounded-full border border-emerald-200/70 dark:border-emerald-400/25 bg-[linear-gradient(120deg,rgba(255,255,255,0.86),rgba(236,253,248,0.82),rgba(233,247,255,0.8))] dark:bg-white/5 hover:bg-emerald-500/15 dark:hover:bg-emerald-400/15">
                   <div className="w-6 sm:w-8 h-6 sm:h-8 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md flex-shrink-0">
                     <User className="w-3 sm:w-4 h-3 sm:h-4 text-white" />
                   </div>
-                  <span className="hidden xl:inline text-xs sm:text-sm font-semibold text-foreground truncate max-w-[120px]">
+                  <span className="sm:hidden text-[11px] font-semibold text-foreground truncate max-w-[48px]">
+                    Saad
+                  </span>
+                  <span className="hidden sm:inline text-xs sm:text-sm font-semibold text-foreground truncate max-w-[120px]">
                     Saad Snani
                   </span>
                 </Button>
