@@ -48,23 +48,21 @@ export function Sidebar({ currentPage, onPageChange, collapsed, onToggleCollapse
       )}>
       {/* Header */}
       <div className="p-4 sm:p-5 border-b border-sidebar-border">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/20 dark:bg-emerald-400/15 flex items-center justify-center border border-emerald-500/35 dark:border-emerald-300/35">
-              <ThemeToggle />
-            </div>
-            <LanguageSwitcher compact className="h-8 sm:h-10" />
+        <div className="grid grid-cols-[auto_auto_auto] items-center justify-between gap-2 mb-3">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/20 dark:bg-emerald-400/15 flex items-center justify-center border border-emerald-500/35 dark:border-emerald-300/35">
+            <ThemeToggle />
           </div>
-          <div className="flex items-center gap-2">
-            {/* Close Menu Button */}
-            <button
-              onClick={onToggleCollapse}
-              className="p-2 hover:bg-emerald-500/15 dark:hover:bg-emerald-400/15 rounded-lg transition-colors"
-              aria-label={t("sidebar.closeMenu")}
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          </div>
+
+          <LanguageSwitcher compact className="h-8 sm:h-10 min-w-[72px] sm:min-w-[84px]" />
+
+          {/* Close Menu Button */}
+          <button
+            onClick={onToggleCollapse}
+            className="p-2 hover:bg-emerald-500/15 dark:hover:bg-emerald-400/15 rounded-lg transition-colors"
+            aria-label={t("sidebar.closeMenu")}
+          >
+            <Menu className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
