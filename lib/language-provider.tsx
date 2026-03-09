@@ -24,8 +24,8 @@ const translations: Record<SiteLanguage, TranslationMap> = {
 
     "header.aria.goBack": "Retour",
     "header.aria.openMenu": "Ouvrir le menu",
-    "header.school.line1": "Ecole Superieure",
-    "header.school.line2": "de Technologie",
+    "header.school.line1": "UNIVERSITÉ SIDI MOHAMED BEN ABDELLAH",
+    "header.school.line2": "ÉCOLE SUPÉRIEURE DE TECHNOLOGIE DE FÈS",
     "header.supervisedBy": "Encadre par",
     "header.realizedBy": "Realise par",
     "header.notifications": "Notifications",
@@ -72,8 +72,8 @@ const translations: Record<SiteLanguage, TranslationMap> = {
 
     "header.aria.goBack": "Go back",
     "header.aria.openMenu": "Open menu",
-    "header.school.line1": "Higher School",
-    "header.school.line2": "of Technology",
+    "header.school.line1": "UNIVERSITÉ SIDI MOHAMED BEN ABDELLAH",
+    "header.school.line2": "ÉCOLE SUPÉRIEURE DE TECHNOLOGIE DE FÈS",
     "header.supervisedBy": "Supervised by",
     "header.realizedBy": "Created by",
     "header.notifications": "Notifications",
@@ -120,8 +120,8 @@ const translations: Record<SiteLanguage, TranslationMap> = {
 
     "header.aria.goBack": "رجوع",
     "header.aria.openMenu": "فتح القائمة",
-    "header.school.line1": "المدرسة العليا",
-    "header.school.line2": "للتكنولوجيا",
+    "header.school.line1": "UNIVERSITÉ SIDI MOHAMED BEN ABDELLAH",
+    "header.school.line2": "ÉCOLE SUPÉRIEURE DE TECHNOLOGIE DE FÈS",
     "header.supervisedBy": "باشراف",
     "header.realizedBy": "انجاز",
     "header.notifications": "الاشعارات",

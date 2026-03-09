@@ -24,6 +24,8 @@ interface HeaderProps {
 
 export function Header({ onLogout, userEmail, onMenuClick, isMenuOpen, showBackButton = false, onBackClick }: HeaderProps) {
   const { t } = useLanguage()
+  const schoolLine1 = "UNIVERSITÉ SIDI MOHAMED BEN ABDELLAH"
+  const schoolLine2 = "ÉCOLE SUPÉRIEURE DE TECHNOLOGIE DE FÈS"
   const notifications: Array<{ id: number; messageKey: string; type: "warning" | "error" | "info" }> = [
     { id: 1, messageKey: "header.notification.batteryLow", type: "warning" },
   ]
@@ -60,11 +62,11 @@ export function Header({ onLogout, userEmail, onMenuClick, isMenuOpen, showBackB
               />
             </div>
             <div className="text-left leading-tight min-w-0 flex-1">
-              <div className="text-base sm:text-lg md:text-xl font-extrabold text-slate-900 dark:text-white truncate">
-                {t("header.school.line1")}
+              <div className="text-[9px] sm:text-[10px] md:text-xs lg:text-[13px] font-extrabold text-slate-900 dark:text-white leading-tight truncate" title={schoolLine1}>
+                {schoolLine1}
               </div>
-              <div className="text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-white truncate">
-                {t("header.school.line2")}
+              <div className="text-[8px] sm:text-[9px] md:text-[11px] lg:text-xs font-bold text-slate-900 dark:text-white leading-tight truncate" title={schoolLine2}>
+                {schoolLine2}
               </div>
             </div>
           </div>
