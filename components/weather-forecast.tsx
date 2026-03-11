@@ -123,19 +123,7 @@ function buildForecast(seed: CitySeed): DailyForecast[] {
   }))
 }
 
-const WEATHER_API: Record<string, CityWeatherData> = Object.fromEntries(
-  Object.entries(CITY_SEED).map(([city, seed]) => [
-    city,
-    {
-      currentTemp: seed.currentTemp,
-      condition: seed.condition,
-      solarFactor: seed.solarFactor,
-      forecast: buildForecast(seed),
-    },
-  ])
-)
 
-const CITY_NAMES = Object.keys(WEATHER_API)
 
 function calculateAutonomyHours(solarFactor: number, batteryCapacity = BATTERY_CAPACITY_KWH, load = LOAD_KWH): number {
   if (load <= 0) {
@@ -185,116 +173,96 @@ export function WeatherForecast() {
   const solarAvailability = useMemo(() => getSolarAvailabilityFactor(currentHour), [currentHour])
   const effectiveSolarFactor = useMemo(
     () => cityData.solarFactor * solarAvailability,
-    [cityData.solarFactor, solarAvailability],
-  )
+      const [weather, setWeather] = useState<CityWeatherData | null>(null)
+      const [loading, setLoading] = useState(true)
+      const [error, setError] = useState<string | null>(null)
 
-  const autonomyHours = useMemo(() => {
-    return calculateAutonomyHours(effectiveSolarFactor)
-  }, [effectiveSolarFactor])
+      useEffect(() => {
+        async function fetchWeather() {
+          setLoading(true)
+          setError(null)
+          try {
+            // Get lat/lon for Fes
+            const geoRes = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=Fes,MA&limit=1&appid=b8ac75ca1be847255b736230cf905c6e`)
+            const geo = await geoRes.json()
+            if (!geo[0]) throw new Error("City not found")
+            const { lat, lon } = geo[0]
+            // Fetch 7-day forecast
+            const res = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=b8ac75ca1be847255b736230cf905c6e`)
+            const data: OWMWeather = await res.json()
+            setWeather({
+              currentTemp: Math.round(data.current.temp),
+              condition: mapOWMCondition(data.current.weather[0]?.main),
+              solarFactor: 1, // not available from OWM
+              forecast: mapOWMToForecast(data),
+            })
+          } catch (e: any) {
+            setError(e.message || "Error fetching weather")
+          } finally {
+            setLoading(false)
+          }
+        }
+        fetchWeather()
+      }, [])
 
-  const baseAutonomyHours = useMemo(() => {
-    return BATTERY_CAPACITY_KWH / LOAD_KWH
-  }, [])
+      if (loading) return <div>Loading weather...</div>
+      if (error) return <div>Error: {error}</div>
+      if (!weather) return <div>No weather data</div>
 
-  const autonomyBand = useMemo(() => {
-    if (autonomyHours >= 4) return "Excellente"
-    if (autonomyHours >= 2.7) return "Bonne"
-    if (autonomyHours >= 1.6) return "Moyenne"
-    return "Faible"
-  }, [autonomyHours])
-
-  const autonomyExplanation = useMemo(() => {
-    if (periodLabel === "Nuit") {
-      return "Mode nuit: faible apport solaire. L'autonomie estimee est principalement liee a la batterie disponible."
-    }
-
-    if (periodLabel === "Soir") {
-      return "Mode soir: l'apport solaire diminue progressivement. L'autonomie reste moyenne a bonne selon la ville."
-    }
-
-    return "Mode jour: apport solaire favorable. L'autonomie est optimisee avec la production PV."
-  }, [periodLabel])
-
-  function handleCitySelect(city: string) {
-    setSelectedCity(city)
-    setStatus("Ville mise a jour automatiquement • Autonomie recalculee en temps reel")
-  }
-
-  const autonomyProgress = useMemo(() => {
-    return Math.max(8, Math.min(100, (autonomyHours / baseAutonomyHours) * 100))
-  }, [autonomyHours, baseAutonomyHours])
-
-  return (
-    <section className="space-y-4">
-      <div className="rounded-[24px] border border-slate-200/70 bg-white/55 p-4 shadow-[0_12px_35px_rgba(15,23,42,0.12)] backdrop-blur-[15px] dark:border-emerald-400/20 dark:bg-[linear-gradient(165deg,rgba(15,23,42,0.62),rgba(6,78,59,0.36)_52%,rgba(14,116,144,0.34))] dark:shadow-[0_18px_36px_rgba(2,6,23,0.45)] sm:p-5">
-        <div className="mb-4 rounded-[18px] border border-emerald-300/70 bg-[linear-gradient(165deg,rgba(236,253,245,0.94),rgba(255,255,255,0.86)_54%,rgba(224,242,254,0.78))] p-4 shadow-[0_12px_24px_rgba(16,185,129,0.12)] dark:border-emerald-400/30 dark:bg-[linear-gradient(165deg,rgba(6,78,59,0.48),rgba(15,23,42,0.78)_58%,rgba(14,116,144,0.46))] dark:shadow-[0_14px_26px_rgba(2,6,23,0.38)] sm:p-5">
-          <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-            <div className="space-y-3">
-              <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-emerald-700 dark:text-emerald-300">Autonomie Estimee (IA)</p>
-
-              <div className="flex flex-wrap items-end gap-2">
-                <p className="text-4xl font-black leading-none text-emerald-800 dark:text-emerald-100 sm:text-5xl">
-                  {autonomyHours.toFixed(1)}h
-                </p>
-                <span className="rounded-full border border-emerald-400/70 bg-emerald-500/15 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.1em] text-emerald-700 dark:border-emerald-300/45 dark:bg-emerald-400/18 dark:text-emerald-200">
-                  {autonomyBand}
-                </span>
-              </div>
-
-              <p className="text-xs font-medium text-emerald-700 dark:text-emerald-300">
-                Ville: {selectedCity}
-                {" • "}
-                {periodLabel}
-              </p>
-
-              <div className="h-2.5 w-full overflow-hidden rounded-full border border-emerald-300/60 bg-white/70 dark:border-emerald-300/35 dark:bg-slate-900/55">
-                <span
-                  className="block h-full rounded-full bg-gradient-to-r from-emerald-500 to-sky-500"
-                  style={{ width: `${autonomyProgress.toFixed(0)}%` }}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                <div className="rounded-lg border border-emerald-300/60 bg-white/70 px-2.5 py-2 dark:border-emerald-300/35 dark:bg-slate-900/55">
-                  <p className="text-[10px] uppercase tracking-[0.08em] text-emerald-700 dark:text-emerald-300">Solar Factor</p>
-                  <p className="text-sm font-bold text-emerald-900 dark:text-emerald-100">{cityData.solarFactor.toFixed(2)}</p>
+      return (
+        <section className="space-y-4">
+          <div className="rounded-[24px] border border-slate-200/70 bg-white/55 p-4 shadow-[0_12px_35px_rgba(15,23,42,0.12)] backdrop-blur-[15px] dark:border-emerald-400/20 dark:bg-[linear-gradient(165deg,rgba(15,23,42,0.62),rgba(6,78,59,0.36)_52%,rgba(14,116,144,0.34))] dark:shadow-[0_18px_36px_rgba(2,6,23,0.45)] sm:p-5">
+            <div className="mb-4 rounded-[18px] border border-emerald-300/70 bg-[linear-gradient(165deg,rgba(236,253,245,0.94),rgba(255,255,255,0.86)_54%,rgba(224,242,254,0.78))] p-4 shadow-[0_12px_24px_rgba(16,185,129,0.12)] dark:border-emerald-400/30 dark:bg-[linear-gradient(165deg,rgba(6,78,59,0.48),rgba(15,23,42,0.78)_58%,rgba(14,116,144,0.46))] dark:shadow-[0_14px_26px_rgba(2,6,23,0.38)] sm:p-5">
+              <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+                <div className="space-y-3">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.12em] text-emerald-700 dark:text-emerald-300">Météo en temps réel</p>
+                  <div className="flex flex-wrap items-end gap-2">
+                    <p className="text-4xl font-black leading-none text-emerald-800 dark:text-emerald-100 sm:text-5xl">
+                      {weather.currentTemp}°C
+                    </p>
+                    <span className="rounded-full border border-emerald-400/70 bg-emerald-500/15 px-2.5 py-1 text-xs font-bold uppercase tracking-[0.1em] text-emerald-700 dark:border-emerald-300/45 dark:bg-emerald-400/18 dark:text-emerald-200">
+                      {weather.condition}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-emerald-200/80">Prévisions OpenWeatherMap pour Fes</p>
                 </div>
-                <div className="rounded-lg border border-emerald-300/60 bg-white/70 px-2.5 py-2 dark:border-emerald-300/35 dark:bg-slate-900/55">
-                  <p className="text-[10px] uppercase tracking-[0.08em] text-emerald-700 dark:text-emerald-300">Disponibilite</p>
-                  <p className="text-sm font-bold text-emerald-900 dark:text-emerald-100">{solarAvailability.toFixed(2)}</p>
-                </div>
-                <div className="rounded-lg border border-emerald-300/60 bg-white/70 px-2.5 py-2 col-span-2 dark:border-emerald-300/35 dark:bg-slate-900/55 sm:col-span-1">
-                  <p className="text-[10px] uppercase tracking-[0.08em] text-emerald-700 dark:text-emerald-300">Base Pleine</p>
-                  <p className="text-sm font-bold text-emerald-900 dark:text-emerald-100">{baseAutonomyHours.toFixed(1)}h</p>
+                <div className="flex flex-col items-end justify-between gap-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-200">
+                    <MapPin className="h-4 w-4" />
+                    Fes
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-200">
+                    {getCurrentConditionIcon(weather.condition)}
+                    {weather.currentTemp}°C • {weather.condition}
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div className="rounded-xl border border-emerald-300/70 bg-white/72 p-4 text-sm text-emerald-900 dark:border-emerald-300/35 dark:bg-slate-900/58 dark:text-emerald-100">
-              <p className="font-semibold flex items-center gap-2">
-                <Brain className="h-4 w-4" />
-                Explication Autonomie
-              </p>
-              <p className="text-xs mt-2 leading-relaxed text-emerald-800 dark:text-emerald-200">{autonomyExplanation}</p>
-
-              <div className="mt-3 space-y-1.5 text-xs text-emerald-700 dark:text-emerald-300">
-                <p>
-                  Formule: (Battery 10kWh / Load 2kWh) x SolarFactor x Disponibilite
-                </p>
-                <p className="flex items-center gap-1.5">
-                  {periodLabel === "Nuit" ? <Moon className="h-3.5 w-3.5" /> : <Sun className="h-3.5 w-3.5" />}
-                  Mode {periodLabel.toLowerCase()} actif
-                </p>
-              </div>
+            <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500 dark:text-emerald-200/70">
+              <span>API OpenWeatherMap • Données réelles</span>
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <h2 className="text-[22px] font-bold text-foreground flex items-center gap-2">
-              <Cloud className="h-5 w-5" />
-              {"7 JOURS • "}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-7">
+            {weather.forecast.map((d, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center rounded-xl border border-slate-200/70 bg-white/60 p-3 text-center shadow-[0_2px_8px_rgba(16,185,129,0.08)] dark:border-emerald-400/20 dark:bg-emerald-900/30 dark:shadow-[0_2px_8px_rgba(2,6,23,0.18)]"
+              >
+                <div className="mb-1 text-xs font-bold text-emerald-700 dark:text-emerald-200">
+                  {d.day} <span className="text-[10px] text-slate-400">({d.date})</span>
+                </div>
+                {getWeatherIcon(d.condition)}
+                <div className="mt-1 text-lg font-bold text-emerald-800 dark:text-emerald-100">
+                  {d.high}° / {d.low}°
+                </div>
+                <div className="text-[11px] text-slate-500 dark:text-emerald-200/70">{d.precipitation}% Pluie</div>
+                <div className="text-xs text-slate-600 dark:text-emerald-200/80">{d.condition}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )
+    }
               {selectedCity}
             </h2>
             <p className="text-sm uppercase tracking-widest text-muted-foreground">Weather + autonomie energetique</p>
