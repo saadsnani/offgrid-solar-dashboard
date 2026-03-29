@@ -6,13 +6,13 @@ import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
 import { DashboardContent } from "@/components/dashboard-content"
 
-// Lazy load heavy pages for better performance
-const AnalyticsPageEnhanced = lazy(() => import("@/components/analytics-page-enhanced").then((m) => ({ default: m.AnalyticsPageEnhanced })))
-const AIPredictionsPage = lazy(() => import("@/components/ai-predictions-page").then((m) => ({ default: m.AIPredictionsPage })))
-const SettingsPage = lazy(() => import("@/components/settings-page").then((m) => ({ default: m.SettingsPage })))
-const SystemHealthPage = lazy(() => import("@/components/system-health-page").then((m) => ({ default: m.SystemHealthPage })))
-const ProfilePage = lazy(() => import("@/components/profile-page").then((m) => ({ default: m.ProfilePage })))
-const RelayControlPage = lazy(() => import("@/components/relay-control-page").then((m) => ({ default: m.RelayControlPage })))
+// Lazy load heavy pages for better performance (default exports only)
+const AnalyticsPageEnhanced = lazy(() => import("@/components/analytics-page-enhanced"));
+const AIPredictionsPage = lazy(() => import("@/components/ai-predictions-page"));
+const SettingsPage = lazy(() => import("@/components/settings-page"));
+const SystemHealthPage = lazy(() => import("@/components/system-health-page"));
+const ProfilePage = lazy(() => import("@/components/profile-page"));
+const RelayControlPage = lazy(() => import("@/components/relay-control-page"));
 // Logs Connexions page removed per request
 
 function LoadingFallback() {
@@ -37,7 +37,7 @@ export type PageType =
   | "system-health"
   | "profile"
 
-export function Dashboard({ onLogout, userEmail }: DashboardProps) {
+export default function Dashboard({ onLogout, userEmail }: DashboardProps) {
   const [currentPage, setCurrentPage] = useState<PageType>("dashboard")
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 

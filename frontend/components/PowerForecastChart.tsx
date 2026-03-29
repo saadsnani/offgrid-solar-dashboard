@@ -67,7 +67,7 @@ export function PowerForecastChart() {
                   borderRadius: "8px",
                 }}
                 labelStyle={{ color: "var(--color-foreground)" }}
-                formatter={(value) => (value !== null ? `${value.toFixed(0)}W` : "--")}
+                formatter={(value) => (typeof value === 'number' ? `${value.toFixed(0)}W` : "--")}
               />
               <Legend />
               <Line
@@ -95,3 +95,5 @@ export function PowerForecastChart() {
     </Card>
   )
 }
+
+export default PowerForecastChart;

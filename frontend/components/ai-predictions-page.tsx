@@ -20,7 +20,7 @@ const weatherForecast = [
   { time: "18:00", icon: CloudRain, temp: 27, condition: "Light Rain" },
 ]
 
-export function AIPredictionsPage() {
+export default function AIPredictionsPage() {
   return (
     <div className="space-y-6">
       <div>

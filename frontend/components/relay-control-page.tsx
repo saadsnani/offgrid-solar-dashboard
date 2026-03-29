@@ -3,7 +3,7 @@
 import { Power } from "lucide-react"
 import { RelayControlPanel } from "@/components/relay-control-panel"
 
-export function RelayControlPage() {
+function RelayControlPage() {
   return (
     <div className="space-y-6">
       <div>
@@ -18,3 +18,5 @@ export function RelayControlPage() {
     </div>
   )
 }
+
+export default RelayControlPage;

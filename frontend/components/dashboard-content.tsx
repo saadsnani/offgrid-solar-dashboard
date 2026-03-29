@@ -29,25 +29,10 @@ function DeferredSectionSkeleton() {
   return <div className="h-40 rounded-lg bg-muted animate-pulse" />
 }
 
-const AIInsightsPanel = dynamic(
-  () => import("@/components/ai-insights-panel").then((module) => module.AIInsightsPanel),
-  { loading: () => <DeferredSectionSkeleton /> },
-)
-
-const PowerForecastChart = dynamic(
-  () => import("@/components/PowerForecastChart").then((module) => module.PowerForecastChart),
-  { loading: () => <DeferredSectionSkeleton /> },
-)
-
-const AnalyticsPageEnhanced = dynamic(
-  () => import("@/components/analytics-page-enhanced").then((module) => module.AnalyticsPageEnhanced),
-  { loading: () => <DeferredSectionSkeleton /> },
-)
-
-const WeatherForecast = dynamic(
-  () => import("@/components/weather-forecast").then((module) => module.WeatherForecast),
-  { loading: () => <DeferredSectionSkeleton /> },
-)
+const AIInsightsPanel = dynamic(() => import("@/components/ai-insights-panel"), { loading: () => <DeferredSectionSkeleton /> })
+const PowerForecastChart = dynamic(() => import("@/components/PowerForecastChart"), { loading: () => <DeferredSectionSkeleton /> })
+const AnalyticsPageEnhanced = dynamic(() => import("@/components/analytics-page-enhanced"), { loading: () => <DeferredSectionSkeleton /> })
+const WeatherForecast = dynamic(() => import("@/components/weather-forecast"), { loading: () => <DeferredSectionSkeleton /> })
 
 // Helper function to add natural fluctuation to existing value
 const fluctuate = (current: number, min: number, max: number, maxChange: number): number => {

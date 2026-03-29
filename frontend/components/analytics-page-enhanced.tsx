@@ -1,9 +1,8 @@
 "use client"
-
 import { useRef } from "react"
-import { Download, FileText, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Download, FileText, AlertCircle } from "lucide-react"
 import { EnergyChart } from "@/components/energy-chart"
 import { useAlert } from "@/lib/alert-provider"
 import { exportToPDF, downloadExcel } from "@/lib/export-utils"
@@ -14,7 +13,7 @@ interface AnalyticsPageEnhancedProps {
   historicalData?: Array<{ time: string; production: number | null; consumption: number | null }>
 }
 
-export function AnalyticsPageEnhanced({ sensors, historicalData }: AnalyticsPageEnhancedProps) {
+export default function AnalyticsPageEnhanced({ sensors, historicalData }: AnalyticsPageEnhancedProps) {
   const reportRef = useRef<HTMLDivElement>(null)
   const { addAlert } = useAlert()
 
@@ -326,3 +325,4 @@ export function AnalyticsPageEnhanced({ sensors, historicalData }: AnalyticsPage
     </div>
   )
 }
+

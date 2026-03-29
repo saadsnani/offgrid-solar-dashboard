@@ -41,5 +41,5 @@ void setup() {
 }
 
 void loop() {
-  // ma kayn walo hna, test f setup
+  
 }

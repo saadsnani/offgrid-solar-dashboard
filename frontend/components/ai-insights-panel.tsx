@@ -132,3 +132,5 @@ export function AIInsightsPanel({ sensors }: AIInsightsPanelProps) {
     </Card>
   )
 }
+
+export default AIInsightsPanel;
