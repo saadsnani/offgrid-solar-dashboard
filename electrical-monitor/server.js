@@ -34,10 +34,10 @@ app.get('/', (req, res) => {
 function generateSensorData() {
   return {
     timestamp: new Date().toISOString(),
-    voltage1: (Math.random() * 25).toFixed(2),      // 0-25V
-    current1: (Math.random() * 5).toFixed(2),       // 0-5A
-    voltage2: (Math.random() * 25).toFixed(2),      // 0-25V
-    current2: (Math.random() * 5).toFixed(2),       // 0-5A
+    voltage1: "12.00",      // Valeur fixe
+    current1: "2.00",       // Valeur fixe
+    voltage2: "12.00",      // Valeur fixe
+    current2: "2.00",       // Valeur fixe
     power1: 0,  // Will be calculated
     power2: 0   // Will be calculated
   };
