@@ -24,7 +24,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   const [alerts, setAlerts] = useState<Alert[]>([])
 
   const addAlert = useCallback((alert: Omit<Alert, "id">) => {
-    const id = Math.random().toString(36).substr(2, 9)
+    const id = "staticid123" // Valeur fixe pour éviter l'aléatoire
     const newAlert = { ...alert, id }
     setAlerts((prev) => [...prev, newAlert])
 

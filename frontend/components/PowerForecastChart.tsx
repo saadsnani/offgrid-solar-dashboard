@@ -28,10 +28,11 @@ function generatePredictionData(): ForecastPoint[] {
     const hour = idx
     const isDay = hour >= startHour && hour <= endHour
     const base = isDay ? peakPower * gaussian(hour, peakHour, sigma) : 0
-    const noise = isDay ? (Math.random() - 0.5) * 20 : 0
+    // Valeurs fixes pour éviter l'aléatoire
+    const noise = isDay ? 0 : 0
     const prediction = Math.max(0, base + noise)
 
-    const realNoise = isDay ? (Math.random() - 0.5) * 30 : 0
+    const realNoise = isDay ? 0 : 0
     const real = Math.max(0, base + realNoise)
 
     return {

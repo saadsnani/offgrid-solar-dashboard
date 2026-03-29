@@ -32,11 +32,11 @@ function DeferredSectionSkeleton() {
 const AIInsightsPanel = dynamic(() => import("@/components/ai-insights-panel"), { loading: () => <DeferredSectionSkeleton /> })
 const PowerForecastChart = dynamic(() => import("@/components/PowerForecastChart"), { loading: () => <DeferredSectionSkeleton /> })
 const AnalyticsPageEnhanced = dynamic(() => import("@/components/analytics-page-enhanced"), { loading: () => <DeferredSectionSkeleton /> })
-const WeatherForecast = dynamic(() => import("@/components/weather-forecast"), { loading: () => <DeferredSectionSkeleton /> })
+// const WeatherForecast = dynamic(() => import("@/components/weather-forecast"), { loading: () => <DeferredSectionSkeleton /> })
 
 // Helper function to add natural fluctuation to existing value
 const fluctuate = (current: number, min: number, max: number, maxChange: number): number => {
-  const change = (Math.random() - 0.5) * 2 * maxChange
+  const change = 0 // Valeur fixe pour éviter l'aléatoire
   const newValue = current + change
   return Math.max(min, Math.min(max, newValue))
 }
@@ -192,11 +192,11 @@ export function DashboardContent() {
       production: createConnectedSensor(simulatedData.production),
       consumption: createConnectedSensor(simulatedData.consumption),
       temperature: createConnectedSensor(simulatedData.temperature),
-      humidity: createConnectedSensor(52 + (Math.random() - 0.5) * 8),
+      humidity: createConnectedSensor(52), // Valeur fixe
       solarVoltage: createConnectedSensor(simulatedData.solarVoltage),
       solarCurrent: createConnectedSensor(simulatedData.solarCurrent),
-      gridVoltage: createConnectedSensor(220 + (Math.random() - 0.5) * 10), // 215-225V
-      gridFrequency: createConnectedSensor(50 + (Math.random() - 0.5) * 0.2), // 49.9-50.1 Hz
+      gridVoltage: createConnectedSensor(220), // Valeur fixe
+      gridFrequency: createConnectedSensor(50), // Valeur fixe
     })
   }, [simulatedData])
 
@@ -297,7 +297,8 @@ export function DashboardContent() {
         <DeferredSectionSkeleton />
       )}
 
-      {showDeferredSections ? <WeatherForecast /> : <DeferredSectionSkeleton />}
+      {/* WeatherForecast désactivé car composant manquant */}
+      {/* {showDeferredSections ? <WeatherForecast /> : <DeferredSectionSkeleton />} */}
     </div>
   )
 }
