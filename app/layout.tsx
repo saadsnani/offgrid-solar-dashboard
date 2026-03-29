@@ -1,0 +1,86 @@
+import type React from "react"
+import type { Metadata, Viewport } from "next"
+import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
+import { ThemeProvider } from "@/lib/theme-provider"
+import { AlertProvider } from "@/lib/alert-provider"
+import { LanguageProvider } from "@/lib/language-provider"
+import { AlertContainer } from "@/components/alert-container"
+import "./globals.css"
+
+const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-plus-jakarta" })
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
+
+export const metadata: Metadata = {
+  title: "Smart EMS - Intelligent Energy Management",
+  description: "Système Photovoltaïque Off-Grid Intelligent Assisté par IA",
+  generator: "v0.app",
+  icons: {
+    icon: [
+      {
+        url: "/icon-light-32x32.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/icon-dark-32x32.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+      {
+        url: "/icon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    apple: "/apple-icon.png",
+  },
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="fr" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                const theme = localStorage.getItem('theme') || 'dark';
+                const isDark = theme === 'dark';
+                const html = document.documentElement;
+                
+                if (isDark) {
+                  html.classList.add('dark');
+                } else {
+                  html.classList.remove('dark');
+                }
+              } catch (e) {
+                // Fallback to dark mode if localStorage is unavailable
+                document.documentElement.classList.add('dark');
+              }
+            })();
+          `
+        }} />
+      </head>
+      <body className={`${plusJakarta.variable} ${geistMono.variable} font-sans antialiased`}>
+        <LanguageProvider>
+          <AlertProvider>
+            <ThemeProvider>
+              <AlertContainer />
+              {children}
+              <Analytics />
+            </ThemeProvider>
+          </AlertProvider>
+        </LanguageProvider>
+      </body>
+    </html>
+  )
+}
